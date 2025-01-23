@@ -7,6 +7,7 @@ Author: Johnny Visser
 import voluptuous as vol
 from datetime import datetime, date, timedelta
 from dateutil.relativedelta import relativedelta
+from homeassistant.components.sensor import SensorDeviceClass
 import urllib.error
 from babel import Locale
 from babel.dates import format_date, format_datetime, format_time
@@ -367,10 +368,12 @@ class AfvalinfoSensor(Entity):
                                 and self.date_format.find("b") == -1
                                 and self.date_format.find("B") == -1
                             ):
-                                self._state = collection_date.strftime(self.date_format)
+                                self._state = collection_date
+                                self._attr_device_class = SensorDeviceClass.DATE
                                 break  # we have a result, break the loop
                             # else convert the named values to the locale names
                             else:
+                                self._attr_device_class = None
                                 edited_date_format = self.date_format.replace(
                                     "%a", "EEE"
                                 )
